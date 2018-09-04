@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from . import serializers
+from . import models
 
 class HelloApiView(APIView):
 
@@ -22,7 +23,7 @@ class HelloApiView(APIView):
     def post(self, request):
         serializer = serializers.HelloSerializer(data=request.data)
         if serializer.is_valid():
-            name = serializer.data.get('name')
+            name = serializer.data['name']
             message = 'Hello {0}'.format(name)
             return Response({'message':message})
         else:
@@ -64,3 +65,8 @@ class HelloViewSet(viewsets.ViewSet):
 
     def destroy(self, request, pk=None):
         return Response({'method':'destroy'})
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()
