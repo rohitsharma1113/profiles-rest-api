@@ -42,3 +42,11 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+class FeedItem(models.Model):
+    user_profile = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status_text = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.status_text
