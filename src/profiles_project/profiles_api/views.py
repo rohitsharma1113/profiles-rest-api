@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import filters
 from . import serializers
 from . import models
@@ -84,3 +85,13 @@ class LoginViewSet(viewsets.ViewSet):
 
     def create(self, request):
         return ObtainAuthToken().post(request)
+
+
+class FeedItemViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.FeedItemSerializer
+    queryset = models.FeedItem.objects.all()
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (permissions.FeedItemPermission, IsAuthenticatedOrReadOnly)
+
+    def perform_create(self, serializer):
+        serializer.save(user_profile=self.request.user)
